@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "name": "Skript ausführen: start:debug",
+            "request": "launch",
+            "command": "npm run start:debug",
+            "cwd": "${workspaceFolder}\\backend"
+        }
+    ]
+}

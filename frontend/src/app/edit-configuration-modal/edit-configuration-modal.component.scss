@@ -1,0 +1,17 @@
+.example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+  
+
+.forms {
+    padding: 10px;
+
+    div {
+        width: 100%;
+
+        mat-form-field {
+            width: 100%;
+        }
+    }
+}

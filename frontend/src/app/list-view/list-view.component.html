@@ -1,0 +1,19 @@
+<div class="wrapper">
+    <div class="loader" *ngIf="loading">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <mat-list role="list" *ngIf="!loading">
+      <mat-list-item role="listitem" *ngFor="let config of configurations">
+        {{config.name}}
+        <button mat-mini-fab color="default" (click)="openCreateConfigModal(config)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-mini-fab color="warn" (click)="deleteConfig(config)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+      <button mat-mini-fab color="primary" (click)="openCreateConfigModal(null)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-list>
+</div>
