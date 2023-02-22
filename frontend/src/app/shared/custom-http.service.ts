@@ -1,6 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, startWith, shareReplay, map, filter } from 'rxjs';
-import { HttpResponse, HttpClient } from '@angular/common/http';
+import { map, Observable, shareReplay, startWith } from 'rxjs';
 
 
 @Injectable({
@@ -21,17 +21,17 @@ export class CustomHttpService {
       return this.cacheData(request, localKey).pipe(map(data => data.body));
   }
   
-  public httpPost<T>(url: string, data: any, localKey: string): Observable<T | null> {
+  public httpPost<T>(url: string, data: any): Observable<T | null> {
     const request = this.http.post<T>(url, data, { observe: 'response' }).pipe(shareReplay())
     return request.pipe(map(data => data.body));
   }
 
-  public httpPatch<T>(url: string, data: any, localKey: string): Observable<T | null> {
+  public httpPatch<T>(url: string, data: any): Observable<T | null> {
     const request = this.http.patch<T>(url, data, { observe: 'response' }).pipe(shareReplay())
     return request.pipe(map(data => data.body));
   }
 
-  public httpDelete<T>(url: string, localKey: string): Observable<T | null> {
+  public httpDelete<T>(url: string): Observable<T | null> {
     const request = this.http.delete<T>(url, { observe: 'response' }).pipe(shareReplay())
     return request.pipe(map(data => data.body));
   }

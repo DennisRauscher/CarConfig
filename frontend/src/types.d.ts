@@ -47,4 +47,5 @@ interface IAdditionalConfiguration {
 
 interface IConfirmationData {
   message: string;
+  title: string;
 }

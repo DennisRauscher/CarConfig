@@ -1,6 +1,6 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable } from 'rxjs';
+
 import { CustomHttpService } from './custom-http.service';
 
 @Injectable({

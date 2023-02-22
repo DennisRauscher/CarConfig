@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { EditConfigurationModalComponent } from '../edit-configuration-modal/edit-configuration-modal.component';
 import { ConfigurationService } from '../shared/configuration.service';
@@ -20,7 +21,6 @@ export class ListViewComponent implements OnInit {
   }
 
   private reloadConfigurations() {
-    console.log("ReloadCall")
     this.loading = true;
     this.configurationService.getAll().subscribe((res) => {
       this.loading = false;
@@ -49,7 +49,7 @@ export class ListViewComponent implements OnInit {
       data: dto
     });
 
-    dialogRef.componentInstance.onTriggerReload.subscribe((data: any) => {
+    dialogRef.componentInstance.triggerReload.subscribe(() => {
       this.reloadConfigurations();
     });
   }
@@ -58,11 +58,12 @@ export class ListViewComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       width: '250px',
       data: {
-        message: "Möchtest du diese Konfiguration wirklich löschen?"
+        message: "Möchtest du diese Konfiguration wirklich löschen?",
+        title: "Konfiguration löschen"
       } as IConfirmationData
     });
 
-    dialogRef.componentInstance.onConfirm.subscribe((data: any) => {
+    dialogRef.componentInstance.confirm.subscribe((data: any) => {
       this.loading = true;
       this.configurationService.deleteConfiguration(configuration.id!).subscribe(() => {
         this.reloadConfigurations();

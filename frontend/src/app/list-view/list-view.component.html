@@ -2,7 +2,7 @@
     <div class="loader" *ngIf="loading">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
-    <ng-container *ngIf="!loading">
+    <ng-container>
       <div class="row" *ngFor="let config of configurations">
         <div class="text">{{config.name}}</div>
         <div class="options">
@@ -15,7 +15,7 @@
         </div>
       </div>
       <button mat-raised-button color="primary" (click)="openCreateConfigModal(null)" class="addButton">
-        Configuration erstellen <mat-icon>add</mat-icon>
+        Konfiguration erstellen <mat-icon>add</mat-icon>
       </button>
     </ng-container>
 </div>
