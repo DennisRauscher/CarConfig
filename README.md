@@ -1,5 +1,6 @@
 <!-- PROJECT LOGO -->
 <br />
+<a name="readme-top"></a>
 <div align="center">
   <img src="documentation/icon.PNG" alt="Logo" width="80" height="80">
 
