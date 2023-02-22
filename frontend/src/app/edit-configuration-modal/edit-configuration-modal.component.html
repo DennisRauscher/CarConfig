@@ -4,6 +4,9 @@
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
   <div class="forms" *ngIf="initialLodingComplete">
+    <div class="total">
+        Gesamtpreis: {{totalPrice|currency:'EUR':true}}
+    </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
@@ -11,9 +14,9 @@
       </mat-form-field>
     </div>
     <div>
-      <mat-form-field appearance="outline" [(ngModel)]="currentConfiguration.carId">
+      <mat-form-field appearance="outline">
         <mat-label>Basismodel</mat-label>
-        <mat-select [disabled]="isLoading">
+        <mat-select [disabled]="isLoading" [(ngModel)]="currentConfiguration.carId" (selectionChange)="calculateTotal()">
           <mat-option *ngFor="let car of cars"
             [value]="car.id">{{car.className}} {{car.modelName}}</mat-option>
         </mat-select>
@@ -22,16 +25,16 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Leistungs-Kit</mat-label>
-        <mat-select [disabled]="isLoading" [(ngModel)]="currentConfiguration.performanceConfigurationId">
+        <mat-select [disabled]="isLoading" [(ngModel)]="currentConfiguration.performanceConfigurationId" (selectionChange)="calculateTotal()">
           <mat-option *ngFor="let performanceConfiguration of performanceConfigurations"
-            [value]="performanceConfiguration.id">{{performanceConfiguration.configName}} ({{performanceConfiguration.power}})</mat-option>
+            [value]="performanceConfiguration.id">{{performanceConfiguration.configName}} ({{performanceConfiguration.power}} kWh)</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Color</mat-label>
-        <mat-select [disabled]="isLoading" [(ngModel)]="currentConfiguration.colorConfigurationId">
+        <mat-label>Farbe</mat-label>
+        <mat-select [disabled]="isLoading" [(ngModel)]="currentConfiguration.colorConfigurationId" (selectionChange)="calculateTotal()">
           <mat-option *ngFor="let colorConfiguration of colorConfigurations"
             [value]="colorConfiguration.id">{{colorConfiguration.colorName}}</mat-option>
         </mat-select>
@@ -40,21 +43,18 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Extras</mat-label>
-        <mat-select [formControl]="extras" [disabled]="isLoading" multiple>
+        <mat-select [(ngModel)]="currentConfiguration.additionalConfigurationsIds" [disabled]="isLoading" multiple (selectionChange)="calculateTotal()">
           <mat-select-trigger>
             {{getFirstItemName()}}
-            <span *ngIf="(extras.value?.length || 0) > 1" class="additional-selection">
-              (+{{(extras.value?.length || 0) - 1}}
-              {{extras.value?.length === 2 ? 'other' : 'others'}})
+            <span *ngIf="currentConfiguration.additionalConfigurationsIds.length > 1" class="additional-selection">
+              (+{{currentConfiguration.additionalConfigurationsIds.length - 1}}
+              {{currentConfiguration.additionalConfigurationsIds.length === 2 ? 'weiteres' : 'weitere'}})
             </span>
           </mat-select-trigger>
           <mat-option *ngFor="let additionalConfiguration of additionalConfigurations"
-            [value]="additionalConfiguration">{{additionalConfiguration.name}}</mat-option>
+            [value]="additionalConfiguration.id">{{additionalConfiguration.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-    <div class="total">
-        Gesamtpreis: 0€
     </div>
   </div>
 </div>

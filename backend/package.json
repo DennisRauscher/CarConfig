@@ -18,6 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docu": "npx @compodoc/compodoc -p tsconfig.json -s",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/typeOrm.config.ts",
     "typeorm:generate-migration": "npm run typeorm -- -d ./src/typeOrm.config.ts migration:generate ./migrations/$npm_config_name",
@@ -40,6 +41,7 @@
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
+    "@compodoc/compodoc": "^1.1.19",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

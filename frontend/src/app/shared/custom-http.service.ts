@@ -23,17 +23,17 @@ export class CustomHttpService {
   
   public httpPost<T>(url: string, data: any, localKey: string): Observable<T | null> {
     const request = this.http.post<T>(url, data, { observe: 'response' }).pipe(shareReplay())
-    return this.cacheData(request, localKey).pipe(map(data => data.body));
+    return request.pipe(map(data => data.body));
   }
 
-  public httpPut<T>(url: string, data: any, localKey: string): Observable<T | null> {
-    const request = this.http.put<T>(url, data, { observe: 'response' }).pipe(shareReplay())
-    return this.cacheData(request, localKey).pipe(map(data => data.body));
+  public httpPatch<T>(url: string, data: any, localKey: string): Observable<T | null> {
+    const request = this.http.patch<T>(url, data, { observe: 'response' }).pipe(shareReplay())
+    return request.pipe(map(data => data.body));
   }
 
   public httpDelete<T>(url: string, localKey: string): Observable<T | null> {
     const request = this.http.delete<T>(url, { observe: 'response' }).pipe(shareReplay())
-    return this.cacheData(request, localKey).pipe(map(data => data.body));
+    return request.pipe(map(data => data.body));
   }
 
 }

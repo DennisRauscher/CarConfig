@@ -16,6 +16,7 @@ interface IConfigurationCreateDto {
 }
 
 interface IConfigurationUpdateDto extends IConfigurationCreateDto {
+    id: number;
 }
 
 interface ICar {

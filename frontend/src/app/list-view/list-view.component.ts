@@ -36,12 +36,13 @@ export class ListViewComponent implements OnInit {
     let dto = null;
     if(configuration !== null) {
       dto = {
+        id: configuration.id,
         name: configuration.name,
         carId: configuration.car.id,
         colorConfigurationId: configuration.colorConfiguration.id,
         performanceConfigurationId: configuration.performanceConfiguration.id,
         additionalConfigurationsIds: configuration.additionalConfigurations.map(({ id }) => id) 
-      } as IConfigurationCreateDto;
+      } as IConfigurationUpdateDto;
     }
 
     const dialogRef = this.dialog.open(EditConfigurationModalComponent, {
@@ -63,12 +64,9 @@ export class ListViewComponent implements OnInit {
 
     dialogRef.componentInstance.onConfirm.subscribe((data: any) => {
       this.loading = true;
-      this.configurationService.deleteConfiguration(configuration.id!).subscribe((res) => {
-        if(res) {
-          this.reloadConfigurations();
-        } else {
-          this.loading = false;
-        }
+      this.configurationService.deleteConfiguration(configuration.id!).subscribe(() => {
+        this.reloadConfigurations();
+        this.loading = false;
       });
     });
   }

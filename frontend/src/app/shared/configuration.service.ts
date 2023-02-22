@@ -21,4 +21,13 @@ export class ConfigurationService {
   deleteConfiguration(id: number): Observable<void | null> {
     return this.customHttpService.httpDelete<void>("/api/v1/configuration/" + id, 'deleteConfiguration_configuration');
   }
+
+  createNewConfiguration(data: IConfigurationCreateDto): Observable<IConfiguration | null> {
+    return this.customHttpService.httpPost<IConfiguration>("/api/v1/configuration", data, 'createNewConfiguration_configuration');
+  } 
+
+  updateConfiguration(data: IConfigurationUpdateDto): Observable<void | null> {
+    return this.customHttpService.httpPatch<void>("/api/v1/configuration/" + data.id, data, 'updateConfiguration_configuration');
+  } 
+  
 }

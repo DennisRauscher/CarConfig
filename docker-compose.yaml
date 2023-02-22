@@ -7,6 +7,20 @@ services:
     POSTGRES_PASSWORD: "postgres"
   ports:
     - "5432:5432"
+ backend:   
+  build: ./
+  image: carconfig:latest
+  links:
+    - "db"
+  environment:
+    POSTGRES_HOST: db
+    POSTGRES_PORT: 5432
+    POSTGRES_USER: "postgres"
+    POSTGRES_PW: "postgres"
+    POSTGRES_DATABASE: "postgres"
+    PORT: 3000
+  ports:
+    - "3000:3000"
 volumes:
   db:
     driver: local

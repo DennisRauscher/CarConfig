@@ -4,7 +4,7 @@ import { ListViewComponent } from './list-view/list-view.component';
 
 const routes: Routes = [
   { path: 'list', component: ListViewComponent },
-  { path: '',   redirectTo: '/list', pathMatch: 'full' },
+  { path: '', redirectTo: '/list', pathMatch: 'full' },
 ];
 
 @NgModule({

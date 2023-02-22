@@ -25,6 +25,6 @@ Work in progress
 # 
 
 # Shortcomings
-- Seperate repos
-- Execute Seed-SQL automaticaly
+- Separate repos
+- Execute Seed-SQL automatically
 - Implement endpoints to manage options
