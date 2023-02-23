@@ -1,15 +1,15 @@
-import {Component, EventEmitter, Inject, Output} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { firstValueFrom, forkJoin } from 'rxjs';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import {AdditionalConfigurationService} from '../shared/additional-configuration.service';
-import {CarService} from '../shared/car.service';
-import {ColorConfigurationService} from '../shared/color-configuration.service';
-import {ConfigurationService} from '../shared/configuration.service';
-import {PerformanceConfigurationService} from '../shared/performance-configuration.service';
+import { AdditionalConfigurationService } from '../shared/additional-configuration.service';
+import { CarService } from '../shared/car.service';
+import { ColorConfigurationService } from '../shared/color-configuration.service';
+import { ConfigurationService } from '../shared/configuration.service';
+import { PerformanceConfigurationService } from '../shared/performance-configuration.service';
+import { forkJoin } from 'rxjs';
 
-@Component({selector: 'app-edit-configuration-modal', templateUrl: './edit-configuration-modal.component.html', styleUrls: ['./edit-configuration-modal.component.scss']})
+@Component({ selector: 'app-edit-configuration-modal', templateUrl: './edit-configuration-modal.component.html', styleUrls: ['./edit-configuration-modal.component.scss'] })
 export class EditConfigurationModalComponent {
     public isEdit = false;
     public isLoading = true;
@@ -18,19 +18,23 @@ export class EditConfigurationModalComponent {
     public initialLodingComplete = false;
     public totalPrice = 0;
 
-    public cars : ICar[] = [];
-    public performanceConfigurations : IPerformanceConfiguration[] = [];
-    public additionalConfigurations : IAdditionalConfiguration[] = [];
-    public colorConfigurations : IColorConfiguration[] = [];
+    public cars: ICar[] = [];
+    public performanceConfigurations: IPerformanceConfiguration[] = [];
+    public additionalConfigurations: IAdditionalConfiguration[] = [];
+    public colorConfigurations: IColorConfiguration[] = [];
 
-    @Output()triggerReload = new EventEmitter < any > (true);
+    @Output() triggerReload = new EventEmitter<any>(true);
 
-    constructor(@Inject(MAT_DIALOG_DATA)public data : IConfigurationCreateDto, private readonly configurationService : ConfigurationService, private readonly carService : CarService, private readonly additionalConfigurationService : AdditionalConfigurationService, private readonly performanceConfigurationService : PerformanceConfigurationService, private readonly colorConfigurationService : ColorConfigurationService,) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: IConfigurationCreateDto, private readonly configurationService: ConfigurationService, private readonly carService: CarService, private readonly additionalConfigurationService: AdditionalConfigurationService, private readonly performanceConfigurationService: PerformanceConfigurationService, private readonly colorConfigurationService: ColorConfigurationService,) {
         this.initDataForDTO(data);
         this.loadFieldData();
     }
 
-    private initDataForDTO(data : IConfigurationCreateDto | IConfigurationUpdateDto) {
+    /**
+     * initiates the component with the given dto
+     * @param data updated data
+     */
+    private initDataForDTO(data: IConfigurationCreateDto | IConfigurationUpdateDto) {
         if (data !== null) {
             this.isEdit = true;
             this.currentConfiguration = data;
@@ -40,41 +44,62 @@ export class EditConfigurationModalComponent {
         }
     }
 
+    /**
+     * loads all required data to calculate and choose a configuration
+     */
     private async loadFieldData() {
-        this.carService
-            .getAll()
-            .subscribe(res => {
-                if (res) {
-                    this.cars = res
-                }
-            });
-        this.additionalConfigurationService
-            .getAll()
-            .subscribe(res => {
-                if (res) {
-                    this.additionalConfigurations = res
-                }
-            });
-        this.performanceConfigurationService
-            .getAll()
-            .subscribe(res => {
-                if (res) {
-                    this.performanceConfigurations = res
-                }
-            });
-        this.colorConfigurationService
-            .getAll()
-            .subscribe(res => {
-                if (res) {
-                    this.colorConfigurations = res
-                }
-                this.isLoading = false; //fix later
+        const carsObjs = this.carService.getAll()
+        carsObjs.subscribe(res => {
+            if (res) {
+                this.cars = res
+            }
+        });
+
+        const extrasObs = this.additionalConfigurationService.getAll();
+        extrasObs.subscribe(res => {
+            if (res) {
+                this.additionalConfigurations = res
+            }
+        });
+
+        const performanceObs = this.performanceConfigurationService
+            .getAll();
+        performanceObs.subscribe(res => {
+            if (res) {
+                this.performanceConfigurations = res
+            }
+        });
+
+        const colorObs = this.colorConfigurationService.getAll();
+
+        colorObs.subscribe(res => {
+            if (res) {
+                this.colorConfigurations = res
+            }
+        });
+
+        //wait for completion of cache and real value fetch
+        forkJoin([
+            carsObjs,
+            colorObs,
+            extrasObs,
+            performanceObs
+        ]).subscribe({
+            next: () => {
+                //use cache
+                this.isLoading = false;
                 this.initialLodingComplete = true;
-            });
+                this.calculateTotal();
+            },
+            complete: () => {
+                //use new values
+                this.calculateTotal();
+            },
+        });
     }
 
-    public getFirstItemName() : string {
-        if(this.currentConfiguration.additionalConfigurationsIds.length > 0) {
+    public getFirstItemName(): string {
+        if (this.currentConfiguration.additionalConfigurationsIds.length > 0) {
             const firstExtra = this
                 .additionalConfigurations
                 .find((acs) => acs.id === this.currentConfiguration.additionalConfigurationsIds[0]);
@@ -85,7 +110,7 @@ export class EditConfigurationModalComponent {
         }
     }
 
-    public calculateTotal() : void {
+    public calculateTotal(): void {
         let newTotal = 0;
 
         // add car price
@@ -130,34 +155,42 @@ export class EditConfigurationModalComponent {
     }
 
     public save() {
-        console.log(this.currentConfiguration)
         this.isLoading = true;
         if (this.isEdit) {
             this
                 .configurationService
                 .updateConfiguration(this.currentConfiguration as IConfigurationUpdateDto)
-                .subscribe(() => {
-                    this
-                        .triggerReload
-                        .emit();
-                    this.initDataForDTO(this.currentConfiguration);
-                    this.isLoading = false;
+                .subscribe({
+                    next: () => {
+                        this
+                            .triggerReload
+                            .emit();
+                        this.initDataForDTO(this.currentConfiguration);
+                        this.isLoading = false;
+                    },
+                    error: () => {
+                        this.isLoading = false;
+                    },
                 });
         } else {
             this
                 .configurationService
                 .createNewConfiguration(this.currentConfiguration)
-                .subscribe((res) => {
-                    if (res) {
-                        this
-                            .triggerReload
-                            .emit();
-                        const dto = this.currentConfiguration as IConfigurationUpdateDto;
-                        dto.id = res.id;
-                        this.initDataForDTO(this.currentConfiguration);
-                        this.isLoading = false;
-                    }
-                });
+                .subscribe(
+                    {
+                        next: (res) => {
+                            if (res) {
+                                this.triggerReload.emit();
+                                const dto = this.currentConfiguration as IConfigurationUpdateDto;
+                                dto.id = res.id;
+                                this.initDataForDTO(this.currentConfiguration);
+                            }
+                            this.isLoading = false;
+                        },
+                        error: () => {
+                            this.isLoading = false;
+                        },
+                    });
         }
     }
 }

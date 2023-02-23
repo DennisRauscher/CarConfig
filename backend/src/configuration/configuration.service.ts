@@ -20,6 +20,11 @@ export class ConfigurationService {
     private configurationRepository: Repository<Configuration>,
   ) {}
 
+  /**
+   * creates a Configuration from provided CreateConfigurationDto data
+   * @param createConfigurationDto dto containing data
+   * @returns created Configuration
+   */
   async create(
     createConfigurationDto: CreateConfigurationDto,
   ): Promise<Configuration> {
@@ -27,6 +32,10 @@ export class ConfigurationService {
     return this.configurationRepository.save(newEntity);
   }
 
+  /**
+   * gets all Configurations with relations
+   * @returns all Configurations with relations
+   */
   async findAll(): Promise<Configuration[]> {
     return this.configurationRepository.find({
       relations: [
@@ -38,7 +47,12 @@ export class ConfigurationService {
     });
   }
 
-  findOne(id: number): Promise<Configuration> {
+  /**
+   * 
+   * @param id returns a Configuration by id including relations
+   * @returns Configuration with relations
+   */
+  findOne(id: number): Promise<Configuration | null> {
     return this.configurationRepository.findOne({
       where: { id: id },
       relations: [
@@ -50,6 +64,12 @@ export class ConfigurationService {
     });
   }
 
+  /**
+   * updates a existing Configuration with data from a updateConfigurationDto
+   * @param id entity to update
+   * @param updateConfigurationDto dto containing the new data
+   * @returns updated Configuration
+   */
   async update(
     id: number,
     updateConfigurationDto: UpdateConfigurationDto,
@@ -78,6 +98,10 @@ export class ConfigurationService {
     return this.configurationRepository.save(existing);
   }
 
+  /**
+   * removes a Configuration
+   * @param id entity to delete
+   */
   async remove(id: number): Promise<void> {
     const existing = await this.configurationRepository.findOne({
       where: { id: id },
@@ -98,6 +122,7 @@ export class ConfigurationService {
   private async dtoToEntity(
     createConfigurationDto: CreateConfigurationDto,
   ): Promise<Configuration> {
+    // confirm existence of every id
     const car = await this.carService.findOne(createConfigurationDto.carId);
     if (!car) {
       throw new NotFoundException('Car not found.');
@@ -109,6 +134,7 @@ export class ConfigurationService {
     if (!colorConfiguration) {
       throw new NotFoundException('ColorConfiguration not found.');
     }
+
     const performanceConfiguration =
       await this.performanceConfigurationService.findOne(
         createConfigurationDto.performanceConfigurationId,
@@ -117,7 +143,7 @@ export class ConfigurationService {
       throw new NotFoundException('PerformanceConfiguration not found.');
     }
 
-    //get all additional configurations and make sure they exist
+    // get all additional configurations and make sure they exist
     const allAdditionalConfigurations =
       await this.additionalConfigurationService.findAll();
 
@@ -133,6 +159,7 @@ export class ConfigurationService {
       usedAdditionalConfigurations.push(res);
     }
 
+    // create new configuration
     const newEntity = new Configuration();
     newEntity.name = createConfigurationDto.name;
     newEntity.car = car;

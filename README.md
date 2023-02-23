@@ -41,6 +41,14 @@ The database has 5 entity-types where all but one is related in a 1..n relations
 <img src="documentation/er.PNG" alt="Logo" height="500"><br/>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Wording
+- all texts on the ui and in the seed.sql are written in german.
+- ```Configuration``` describes a configuration including: a selected car, a selected color, a selected performance configuration, 0-n selected extras
+- ```Car``` describes the base model of the car
+- ```PerformanceConfiguration``` describes the power of the car (motorization)
+- ```ColorConfiguration``` describes the color for a car
+- ```AdditionalConfiguration``` describes a "exta"-feature for the car like a panoramic roof
+
 ### Getting Started
 
 #### Run via docker
@@ -70,8 +78,13 @@ The database has 5 entity-types where all but one is related in a 1..n relations
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Shortcomings
-- Separate repos
+- Separate repos & Dockerfiles 
+#### Backend
 - Execute Seed-SQL automatically
-- Implement endpoints to manage options
+- Use migrations
+- Implement endpoints to manage options (full CRUD support)
+#### Frontend
+- UI needs a overhaul to be more responsive and pleasant to look at
+- Use error tokens instead of strings
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

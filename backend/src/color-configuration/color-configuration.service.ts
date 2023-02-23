@@ -1,9 +1,9 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { CreateColorConfigurationDto } from './dto/create-color-configuration.dto';
-import { UpdateColorConfigurationDto } from './dto/update-color-configuration.dto';
-import { ColorConfiguration } from './entities/color-configuration.entity';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { CreateColorConfigurationDto } from './dto/create-color-configuration.dto';
+import { ColorConfiguration } from './entities/color-configuration.entity';
 
 @Injectable()
 export class ColorConfigurationService {
@@ -12,6 +12,11 @@ export class ColorConfigurationService {
     private colorConfigurationRepository: Repository<ColorConfiguration>,
   ) {}
 
+  /**
+   * creates a CreateColorConfigurationDto in the database
+   * @param CreateColorConfigurationDto 
+   * @returns Promise for created CreateColorConfigurationDto
+   */
   create(
     createColorConfigurationDto: CreateColorConfigurationDto,
   ): Promise<ColorConfiguration> {
@@ -21,19 +26,20 @@ export class ColorConfigurationService {
     return this.colorConfigurationRepository.save(newEntity);
   }
 
+  /**
+   * finds all ColorConfiguration-Entities and returns them
+   * @returns promise of array of all ColorConfigurations
+   */
   async findAll(): Promise<ColorConfiguration[]> {
     return this.colorConfigurationRepository.find();
   }
 
-  findOne(id: number): Promise<ColorConfiguration> {
+  /**
+   * finds one ColorConfiguration by id
+   * @param id id of ColorConfiguration entity
+   * @returns promise of found ColorConfiguration
+   */
+  findOne(id: number): Promise<ColorConfiguration | null> {
     return this.colorConfigurationRepository.findOneBy({ id: id });
-  }
-
-  update(id: number, updateColorConfigurationDto: UpdateColorConfigurationDto) {
-    throw new NotImplementedException();
-  }
-
-  remove(id: number) {
-    throw new NotImplementedException();
   }
 }

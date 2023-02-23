@@ -20,18 +20,23 @@ export class ListViewComponent implements OnInit {
     this.reloadConfigurations();
   }
 
+  /**
+   * reloads the configurations from the backend
+   */
   private reloadConfigurations() {
     this.loading = true;
     this.configurationService.getAll().subscribe((res) => {
       this.loading = false;
       if(res) {
         this.configurations = res;
-      } else {
-        //handle error
       }
     });
   }
 
+  /**
+   * open create new configuration modal
+   * @param configuration existing configuration or null to create a new one
+   */
   public openCreateConfigModal(configuration: IConfiguration | null): void {
     let dto = null;
     if(configuration !== null) {
@@ -54,6 +59,10 @@ export class ListViewComponent implements OnInit {
     });
   }
   
+  /**
+   * deletes a configuration
+   * @param configuration configuration to delete
+   */
   public deleteConfig(configuration: IConfiguration): void {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       width: '250px',

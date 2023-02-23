@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ManyToMany } from 'typeorm/decorator/relations/ManyToMany';
+
 import { Configuration } from '../../configuration/entities/configuration.entity';
 
 @Entity()

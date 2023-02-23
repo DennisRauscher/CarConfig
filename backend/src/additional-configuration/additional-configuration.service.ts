@@ -1,8 +1,8 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { CreateAdditionalConfigurationDto } from './dto/create-additional-configuration.dto';
-import { UpdateAdditionalConfigurationDto } from './dto/update-additional-configuration.dto';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { CreateAdditionalConfigurationDto } from './dto/create-additional-configuration.dto';
 import { AdditionalConfiguration } from './entities/additional-configuration.entity';
 
 @Injectable()
@@ -12,6 +12,11 @@ export class AdditionalConfigurationService {
     private additionalConfigurationRepository: Repository<AdditionalConfiguration>,
   ) {}
 
+  /**
+   * creates a AdditionalConfiguration in the database
+   * @param createAdditionalConfigurationDto 
+   * @returns Promise for created AdditionalConfiguration
+   */
   create(
     createAdditionalConfigurationDto: CreateAdditionalConfigurationDto,
   ): Promise<AdditionalConfiguration> {
@@ -22,22 +27,20 @@ export class AdditionalConfigurationService {
     return this.additionalConfigurationRepository.save(newEntity);
   }
 
+  /**
+   * finds all AdditionalConfiguration-Entities and returns them
+   * @returns promise of array of all AdditionalConfigurations
+   */
   async findAll(): Promise<AdditionalConfiguration[]> {
     return this.additionalConfigurationRepository.find();
   }
 
-  findOne(id: number): Promise<AdditionalConfiguration> {
+  /**
+   * finds one AdditionalConfiguration by id
+   * @param id id of AdditionalConfiguration entity
+   * @returns promise of found AdditionalConfiguration
+   */
+  findOne(id: number): Promise<AdditionalConfiguration | null> {
     return this.additionalConfigurationRepository.findOneBy({ id: id });
-  }
-
-  update(
-    id: number,
-    updateAdditionalConfigurationDto: UpdateAdditionalConfigurationDto,
-  ) {
-    throw new NotImplementedException();
-  }
-
-  remove(id: number) {
-    throw new NotImplementedException();
   }
 }

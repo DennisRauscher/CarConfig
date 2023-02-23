@@ -1,9 +1,8 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { CreatePerformanceConfigurationDto } from './dto/create-performance-configuration.dto';
-import { UpdatePerformanceConfigurationDto } from './dto/update-performance-configuration.dto';
-import { PerformanceConfiguration } from './entities/performance-configuration.entity';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { PerformanceConfiguration } from './entities/performance-configuration.entity';
 
 @Injectable()
 export class PerformanceConfigurationService {
@@ -11,27 +10,21 @@ export class PerformanceConfigurationService {
     @InjectRepository(PerformanceConfiguration)
     private performanceConfigurationRepository: Repository<PerformanceConfiguration>,
   ) {}
-
-  create(createPerformanceConfigurationDto: CreatePerformanceConfigurationDto) {
-    throw new NotImplementedException();
-  }
-
+  
+  /**
+   * finds all PerformanceConfiguration-Entities and returns them
+   * @returns promise of array of all PerformanceConfiguration
+   */
   async findAll(): Promise<PerformanceConfiguration[]> {
     return this.performanceConfigurationRepository.find();
   }
 
-  findOne(id: number): Promise<PerformanceConfiguration> {
+  /**
+   * finds one PerformanceConfiguration by id
+   * @param id id of PerformanceConfiguration entity
+   * @returns promise of found PerformanceConfiguration
+   */
+  findOne(id: number): Promise<PerformanceConfiguration | null> {
     return this.performanceConfigurationRepository.findOneBy({ id: id });
-  }
-
-  update(
-    id: number,
-    updatePerformanceConfigurationDto: UpdatePerformanceConfigurationDto,
-  ) {
-    throw new NotImplementedException();
-  }
-
-  remove(id: number) {
-    throw new NotImplementedException();
   }
 }

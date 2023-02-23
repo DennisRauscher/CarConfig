@@ -17,6 +17,9 @@ export class ConfirmationModalComponent {
     this.title = data.title;
   }
 
+  /**
+   * emit event to parent component
+   */
   public callCallback() {
     this.confirm.emit();
   }

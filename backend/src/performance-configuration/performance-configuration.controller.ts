@@ -1,17 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotImplementedException,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+
+import { PerformanceConfiguration } from './entities/performance-configuration.entity';
 import { PerformanceConfigurationService } from './performance-configuration.service';
-import { CreatePerformanceConfigurationDto } from './dto/create-performance-configuration.dto';
-import { UpdatePerformanceConfigurationDto } from './dto/update-performance-configuration.dto';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('performance-configuration')
 export class PerformanceConfigurationController {
@@ -19,38 +9,28 @@ export class PerformanceConfigurationController {
     private readonly performanceConfigurationService: PerformanceConfigurationService,
   ) {}
 
-  @ApiExcludeEndpoint()
-  @Post()
-  create(
-    @Body()
-    createPerformanceConfigurationDto: CreatePerformanceConfigurationDto,
-  ) {
-    throw new NotImplementedException();
-  }
-
+  /**
+   * finds all PerformanceConfiguration
+   * @returns promise of all found entities
+   */
   @Get()
-  findAll() {
+  findAll(): Promise<PerformanceConfiguration[]> {
     return this.performanceConfigurationService.findAll();
   }
 
+  /**
+   * tries to find a PerformanceConfiguration by id
+   * @param id PerformanceConfiguration id
+   * @returns promise of found PerformanceConfiguration or null
+   */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.performanceConfigurationService.findOne(+id);
-  }
+  findOne(@Param('id') id: string): Promise<PerformanceConfiguration> {
+    const foundEntity = this.performanceConfigurationService.findOne(+id);
+    
+    if(!foundEntity) {
+      throw new NotFoundException("Entity not found.");
+    }
 
-  @ApiExcludeEndpoint()
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body()
-    updatePerformanceConfigurationDto: UpdatePerformanceConfigurationDto,
-  ) {
-    throw new NotImplementedException();
-  }
-
-  @ApiExcludeEndpoint()
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    throw new NotImplementedException();
+    return foundEntity;
   }
 }

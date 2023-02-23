@@ -10,15 +10,20 @@ export class CarService {
     private carRepository: Repository<Car>,
   ) {}
 
+  /**
+   * finds all Car-Entities and returns them
+   * @returns promise of array of all Cars
+   */
   async findAll(): Promise<Car[]> {
     return this.carRepository.find();
   }
 
-  findOne(id: number): Promise<Car> {
+  /**
+   * finds one Car by id
+   * @param id id of Car entity
+   * @returns promise of found Car
+   */
+  findOne(id: number): Promise<Car | null> {
     return this.carRepository.findOneBy({ id: id });
-  }
-
-  remove(id: number) {
-    throw new NotImplementedException();
   }
 }
